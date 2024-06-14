@@ -2,7 +2,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.lang.reflect.Field;
 
 
 class HorseTest {
@@ -16,28 +19,64 @@ class HorseTest {
     void tearDown() {
     }
     @Test
-    void extend_Throws_Null_In_Name_Horse(){
-        Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse(null,0,0));
-        Assertions.assertEquals("Name cannot be null.",horse = new Horse(null,0,0));
+
+    void extend_Null_In_Name_Horse(){
+        Throwable throwable = Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse(null,0,0));
+        Assertions.assertEquals("Name cannot be null.",throwable.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {" ","   "})
+    void extend_isBlank_In_Name_Horse(String argument){
+        Throwable throwable = Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse(argument,0,0));
+        Assertions.assertEquals("Name cannot be blank.",throwable.getMessage());
     }
     @Test
-    void extend_Throws_Negative_Speed(){
-        Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse("horse",-10,0));
+    void extend_Negative_Speed(){
+        Throwable throwable = Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse("horse",-10,0));
+        Assertions.assertEquals("Speed cannot be negative.",throwable.getMessage());
     }
     @Test
     void extend_Throws_Negative_Distance(){
-        Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse("horse",0,-10));
+        Throwable throwable = Assertions.assertThrows(IllegalArgumentException.class,()->horse = new Horse("horse",0,-10));
+        Assertions.assertEquals("Distance cannot be negative.",throwable.getMessage());
     }
     @Test
-    void getName() {
+    void getName() throws NoSuchFieldException, IllegalAccessException {
+        horse = new Horse("n21",10);
+        Field Field = Horse.class.getDeclaredField("name");
+        Field.setAccessible(true);
+        String name = (String) Field.get(horse);
+        Assertions.assertEquals("n21",name);
+        Assertions.assertEquals(name,horse.getName());
     }
 
     @Test
-    void getSpeed() {
+    void getSpeed() throws NoSuchFieldException, IllegalAccessException {
+        horse = new Horse("n21",10);
+        Field Field = Horse.class.getDeclaredField("speed");
+        Field.setAccessible(true);
+        double speed = (double) Field.get(horse);
+        Assertions.assertEquals(10,speed);
+        Assertions.assertEquals(speed,horse.getSpeed());
     }
 
     @Test
-    void getDistance() {
+    void getDistance() throws IllegalAccessException, NoSuchFieldException {
+        horse = new Horse("n21",10,10);
+        Field Field = Horse.class.getDeclaredField("distance");
+        Field.setAccessible(true);
+        double distance = (double) Field.get(horse);
+        Assertions.assertEquals(10,distance);
+        Assertions.assertEquals(distance,horse.getDistance());
+    }
+    @Test
+    void getDistanceNotEnterConstructor() throws IllegalAccessException, NoSuchFieldException {
+        horse = new Horse("n21",10);
+        Field Field = Horse.class.getDeclaredField("distance");
+        Field.setAccessible(true);
+        double distance = (double) Field.get(horse);
+        Assertions.assertEquals(0,distance);
+        Assertions.assertEquals(distance,horse.getDistance());
     }
 
     @Test
