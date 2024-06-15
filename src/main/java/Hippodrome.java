@@ -16,7 +16,7 @@ public class Hippodrome {
         }
 
         this.horses = horses;
-    }
+}
 
     public List<Horse> getHorses() {
         return Collections.unmodifiableList(horses);

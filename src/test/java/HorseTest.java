@@ -3,9 +3,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
+
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
 
 
 class HorseTest {
@@ -80,10 +86,30 @@ class HorseTest {
     }
 
     @Test
-    void move() {
+    void moveGetRandom() {
+
+        try (MockedStatic<Horse> mockedStatic = Mockito.mockStatic(Horse.class)) {
+            horse = new Horse("name", 10, 5);
+            horse.move();
+            mockedStatic.verify(() -> Horse.getRandomDouble(0.2, 0.9));
+
+
+        }
+    }
+    @ParameterizedTest
+    @CsvSource({"1.5,10"})
+    void move(double random, double dist) {
+
+        try (MockedStatic<Horse> mockedStatic = Mockito.mockStatic(Horse.class)){
+            horse = new Horse("name",10,dist);
+            mockedStatic.when(()->Horse.getRandomDouble(0.2,0.9)).thenReturn(random);
+            horse.move();
+            var actual = dist+horse.getSpeed()*Horse.getRandomDouble(0.2,0.9);
+            var extend = horse.getDistance();
+            Assertions.assertEquals(extend,actual);
+
+        }
+
     }
 
-    @Test
-    void getRandomDouble() {
-    }
 }
