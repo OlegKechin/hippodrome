@@ -51,5 +51,14 @@ class HippodromeTest {
 
     @Test
     void getWinner() {
+        List<Horse> horses = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            horses.add(new Horse("name"+i,i,i));
+        }
+
+        Hippodrome hippodrome = new Hippodrome(horses);
+
+        Assertions.assertEquals(horses.get(9),hippodrome.getWinner());
+
     }
 }
