@@ -20,7 +20,7 @@ public class Main {
         );
         Hippodrome hippodrome = new Hippodrome(horses);
 
-        log.debug("Начало скачек. Количество участников:{}",horses.size());
+        log.info("Начало скачек. Количество участников:{}",horses.size());
 
         for (int i = 0; i < 100; i++) {
             hippodrome.move();

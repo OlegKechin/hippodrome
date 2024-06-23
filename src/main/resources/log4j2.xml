@@ -2,7 +2,7 @@
 <Configuration status="warn" name="MyApp">
     <Appenders>
         <RollingFile name="RollingFile" fileName="logs/Hippodrome.log"
-                     filePattern="logs/Hippodrome.%d{yyyy-MM-dd-mm}.log"
+                     filePattern="logs/Hippodrome.%d{yyyy-MM-dd}.log"
                      ignoreExceptions="false">
             <PatternLayout>
                 <Pattern>"%highlight{%d %-5level %logger{36}: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=yellow,
